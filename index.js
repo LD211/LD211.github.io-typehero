@@ -1,4 +1,6 @@
 let spot;
+let mtWords;
+let monkeyWords = [];
 let targetpos = null;
 let cursorName = "outlineblock";
 let spotNumber = 0;
@@ -37,8 +39,7 @@ document.addEventListener("keydown", (event) => {
     restartGame();
     if (title === "english200") {
       display.innerText = "";
-      getEnglishWords();
-      updateCursor();
+      remakeEnglishWords();
     }
   } else if (event.key === "ArrowLeft") {
     songIndex--;
@@ -56,7 +57,6 @@ document.addEventListener("keydown", (event) => {
     display.innerText = "";
     getEnglishWords();
     spotNumber = 0;
-    updateCursor();
   }
 });
 
@@ -91,13 +91,31 @@ function getEnglishWords() {
       //entireSong.replaceAll('\r\n', '<br>');
       //entireSong.replaceAll('\r', '<br>');
       entireSong = entireSong.replace(/\r?\n|\r/g, "\n");
-      const mtWords = entireSong.split("\n");
+      mtWords = entireSong.split("\n");
+      monkeyWords = mtWords;
+      let randomIndex;
       for (let i = 0; i < mtWords.length; i++) {
-        mtWords[i] = mtWords[Math.floor(Math.random() * 198) + 1];
+        randomIndex = Math.floor(Math.random() * i);
+        [mtWords[i], mtWords[randomIndex]] = [mtWords[randomIndex], mtWords[i]];
       }
       entireSong = mtWords.join(" ");
       interpretWords(entireSong);
     });
+}
+
+function remakeEnglishWords() {
+  if (monkeyWords) {
+    let randomIndex;
+    for (let i = 0; i < monkeyWords.length; i++) {
+      randomIndex = Math.floor(Math.random() * i);
+      [monkeyWords[i], monkeyWords[randomIndex]] = [
+        monkeyWords[randomIndex],
+        monkeyWords[i],
+      ];
+    }
+    entireSong = monkeyWords.join(" ");
+    interpretWords(entireSong);
+  }
 }
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -112,11 +130,12 @@ document.addEventListener("DOMContentLoaded", function () {
     if (startFlag === 0) {
       startTime = new Date();
       if (title) {
-        theAudio = new Audio("./sounds/" + title + ".mp3");
-        if (theAudio) {
+        if (title !== "english200") {
+          theAudio = new Audio("./sounds/" + title + ".mp3");
           visualizeTheAudio(theAudio);
         }
         //theAudio.play()
+        //var currentTime = audio.currentTime; // Current playback time in seconds
         startFlag = 1;
       } else {
         display.innerText =
@@ -244,6 +263,7 @@ function calculateWPM(startTime, endTime, length) {
 
 function interpretWords(song) {
   display.innerHTML = [...song].map((c) => `<span>${c}</span>`).join("");
+  updateCursor();
 }
 function gameInput(song) {
   spot = entireSong[spotNumber];
