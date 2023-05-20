@@ -34,8 +34,12 @@ const songNames = [
 ];
 getSongLyrics();
 
+window.onload = function () {
+  document.getElementById("textInput").focus();
+};
+
 document.addEventListener("keydown", (event) => {
-  if (event.key === "Escape") {
+  if (event.key === "Enter") {
     restartGame();
     if (title === "english200") {
       display.innerText = "";
@@ -88,8 +92,6 @@ function getEnglishWords() {
     })
     .then((text) => {
       entireSong = text;
-      //entireSong.replaceAll('\r\n', '<br>');
-      //entireSong.replaceAll('\r', '<br>');
       entireSong = entireSong.replace(/\r?\n|\r/g, "\n");
       mtWords = entireSong.split("\n");
       monkeyWords = mtWords;
@@ -134,7 +136,6 @@ document.addEventListener("DOMContentLoaded", function () {
           theAudio = new Audio("./sounds/" + title + ".mp3");
           visualizeTheAudio(theAudio);
         }
-        //theAudio.play()
         //var currentTime = audio.currentTime; // Current playback time in seconds
         startFlag = 1;
       } else {
@@ -249,8 +250,8 @@ function smoothCursor() {
     cursor.style.top = targetpos.top + "px";
     return;
   }
-  const nextLeft = leftpos + (targetpos.left - leftpos) / 10;
-  const nextTop = toppos + (targetpos.top - toppos) / 10;
+  const nextLeft = leftpos + (targetpos.left - leftpos) / 11;
+  const nextTop = toppos + (targetpos.top - toppos) / 11;
   cursor.style.left = nextLeft + "px";
   cursor.style.top = nextTop + "px";
   requestAnimationFrame(smoothCursor);
@@ -267,22 +268,15 @@ function interpretWords(song) {
 }
 function gameInput(song) {
   spot = entireSong[spotNumber];
-  if (song === spot && spot !== " ") {
-    //display.innerText = spot===" "?display.innerText:display.innerText.substring(1);
-    //document.getElementsByTagName("span")[0].remove();
-    //typedText.textContent = entireSong.slice(0, spotNumber);
+  if (song === spot) {
     spotNumber++;
     updateCursor();
   }
-  if (spot === " ") {
-    //document.getElementsByTagName("span")[0].remove();
+  if (spot === "*") {
     spotNumber++;
     updateCursor();
   }
   if (spot == "\r" || spot == "\n") {
-    //display.innerText = spot===" "?display.innerText:display.innerText.substring(1)
-    //document.getElementsByTagName("span")[0].remove();
-    //document.getElementsByTagName("span")[0].remove();
     spotNumber++;
     updateCursor();
   }
@@ -300,8 +294,6 @@ function getSongLyrics() {
     })
     .then((text) => {
       entireSong = text;
-      //entireSong.replaceAll('\r\n', '<br>');
-      //entireSong.replaceAll('\r', '<br>');
       entireSong = entireSong.replace(/\r?\n|\r/g, "\n");
       interpretWords(entireSong);
     });
