@@ -19,6 +19,11 @@ let display = document.getElementById("typing");
 const typedText = document.createElement("span");
 display.appendChild(typedText);
 let liveWpm = document.getElementById("livewpm");
+//document.body.style.backgroundImage = "url('./images/alejandro.jpg')";
+let backgroundDiv = document.getElementById("background");
+backgroundDiv.style.backgroundImage = "url('./images/" + title + ".jpg')";
+backgroundDiv.style.opacity = "0.4"; //major key alert
+
 const songNames = [
   "bands",
   "givemeareason",
@@ -76,6 +81,9 @@ function liveWordsPerMinute() {
     liveWpm.innerText = Math.floor((spotNumber / 5) / secondslive * 60) +
       " wpm";
   }, 1000);
+}
+
+function ghostCaret() {
 }
 
 function restartGame() {
@@ -155,6 +163,7 @@ function visualizeTheAudio(theAudio) {
   var analyser = context.createAnalyser();
 
   var canvas = document.getElementById("canvas");
+  canvas.style.backgroundColor = "rgba(255,255,255,0)";
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
   var ctx = canvas.getContext("2d");
@@ -167,7 +176,6 @@ function visualizeTheAudio(theAudio) {
   var bufferLength = analyser.frequencyBinCount;
   console.log(bufferLength);
   var dataArray = new Uint8Array(bufferLength);
-
   var WIDTH = canvas.width;
   var HEIGHT = canvas.height;
 
@@ -180,9 +188,18 @@ function visualizeTheAudio(theAudio) {
     x = 0;
 
     analyser.getByteFrequencyData(dataArray);
-
     ctx.fillStyle = "#000";
+    ctx.globalCompositeOperation = "destination-out";
     ctx.fillRect(0, 0, WIDTH, HEIGHT);
+    ctx.globalCompositeOperation = "source-over";
+
+    let opacityValues = 0;
+    for (let j = 0; j < dataArray.length; j++) {
+      opacityValues += dataArray[j];
+    }
+    let average = opacityValues / dataArray.length;
+    let volume = average / 255;
+    backgroundDiv.style.opacity = volume;
 
     for (var i = 0; i < bufferLength; i++) {
       barHeight = dataArray[i];
@@ -295,6 +312,7 @@ function getSongLyrics() {
     .then((text) => {
       entireSong = text;
       entireSong = entireSong.replace(/\r?\n|\r/g, "\n");
+      backgroundDiv.style.backgroundImage = "url('./images/" + title + ".jpg')";
       interpretWords(entireSong);
     });
 }
