@@ -22,7 +22,7 @@ let liveWpm = document.getElementById("livewpm");
 //document.body.style.backgroundImage = "url('./images/alejandro.jpg')";
 let backgroundDiv = document.getElementById("background");
 backgroundDiv.style.backgroundImage = "url('./images/" + title + ".jpg')";
-backgroundDiv.style.opacity = "0.4"; //major key alert
+backgroundDiv.style.opacity = "0.9"; //major key alert
 
 const songNames = [
   "bands",
@@ -55,7 +55,6 @@ document.addEventListener("keydown", (event) => {
     if (songIndex < 0) {
       songIndex = songNames.length - 1;
     }
-    console.log(songIndex); //outputs nan
     title = songNames[songIndex];
     display.innerText = "";
     getSongLyrics();
@@ -174,7 +173,6 @@ function visualizeTheAudio(theAudio) {
   analyser.fftSize = 256;
 
   var bufferLength = analyser.frequencyBinCount;
-  console.log(bufferLength);
   var dataArray = new Uint8Array(bufferLength);
   var WIDTH = canvas.width;
   var HEIGHT = canvas.height;
@@ -199,8 +197,9 @@ function visualizeTheAudio(theAudio) {
     }
     let average = opacityValues / dataArray.length;
     let volume = average / 255;
-    backgroundDiv.style.opacity = volume;
-
+    backgroundDiv.style.opacity = 1 - volume;
+    backgroundDiv.style.backgroundSize = (100 + volume * 2) + "%" + " " +
+      (100 + volume * 2) + "%";
     for (var i = 0; i < bufferLength; i++) {
       barHeight = dataArray[i];
 

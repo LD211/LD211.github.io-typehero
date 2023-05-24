@@ -1,6 +1,6 @@
 
 body{
-  background-color:black;
+  background-color:white;
 }
 
 .background-image {
@@ -22,7 +22,7 @@ body{
 #livewpm {
   position:fixed;
   color:white;
-  font-family:"nerdspace mono";
+  font-family:"aller";
   left:70%;
   top:2px;
   font-size: 30px;
@@ -33,7 +33,7 @@ body{
   position:relative;
   color:white;
   font-size:30px;
-  font-family: "nerdspace mono";
+  font-family: "gotham";
   z-index:1;
   
 }
@@ -69,4 +69,24 @@ body{
 @font-face {
   font-family: "nerdspace mono";
   src: url('./fonts/jetbrains.ttf');
+}
+
+@font-face {
+  font-family: "aller";
+  src: url('./fonts/aller.ttf');
+}
+
+@font-face {
+  font-family: "smallpixel";
+  src: url('./fonts/smallpixel.ttf');
+}
+
+@font-face {
+  font-family: "gotham";
+  src: url('./fonts/GothamMedium.ttf');
+}
+
+@font-face {
+  font-family: "fortnite";
+  src: url('./fonts/fortnite.otf');
 }
