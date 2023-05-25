@@ -33,7 +33,7 @@ body{
   position:relative;
   color:white;
   font-size:30px;
-  font-family: "gotham";
+  font-family: "iosevka";
   z-index:1;
   
 }
@@ -89,4 +89,14 @@ body{
 @font-face {
   font-family: "fortnite";
   src: url('./fonts/fortnite.otf');
+}
+
+@font-face {
+  font-family: "Venacti";
+  src: url('./fonts/Venacti.ttf');
+}
+
+@font-face {
+  font-family: "iosevka";
+  src: url('./fonts/iosevka.ttf');
 }

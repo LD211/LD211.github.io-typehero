@@ -197,9 +197,9 @@ function visualizeTheAudio(theAudio) {
     }
     let average = opacityValues / dataArray.length;
     let volume = average / 255;
-    backgroundDiv.style.opacity = 1 - volume;
-    backgroundDiv.style.backgroundSize = (100 + volume * 2) + "%" + " " +
-      (100 + volume * 2) + "%";
+    backgroundDiv.style.opacity = 1 - (volume / 2);
+    backgroundDiv.style.backgroundSize = (100 + volume) + "%" + " " +
+      (100 + volume) + "%";
     for (var i = 0; i < bufferLength; i++) {
       barHeight = dataArray[i];
 
