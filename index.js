@@ -63,6 +63,7 @@ document.addEventListener("keydown", (event) => {
   } else if (event.key === "&") {
     title = "english200";
     display.innerText = "";
+    backgroundDiv.style.backgroundImage = "url('./images/none.jpg')";
     getEnglishWords();
     spotNumber = 0;
   }
@@ -108,8 +109,16 @@ function getEnglishWords() {
         [mtWords[i], mtWords[randomIndex]] = [mtWords[randomIndex], mtWords[i]];
       }
       entireSong = mtWords.join(" ");
-      interpretWords(entireSong);
+      testRemake(entireSong);
     });
+}
+
+function interpretHighlightWords(song) {
+  let highlightedWords = ["under", "follow", "look"];
+  let songWords = song.split(" ");
+  display.innerHTML = [...song].map((c) => `<span>${c}</span>`).join("");
+
+  updateCursor();
 }
 
 function remakeEnglishWords() {
@@ -123,8 +132,34 @@ function remakeEnglishWords() {
       ];
     }
     entireSong = monkeyWords.join(" ");
-    interpretWords(entireSong);
+    testRemake(entireSong);
   }
+}
+
+function testRemake(song) {
+  let highlightedWords = ["under", "follow", "look"];
+  let songWords = song.split(" ");
+  let returnVariable = [];
+  for (let i = 0; i < songWords.length; i++) {
+    if (highlightedWords.includes(songWords[i])) {
+      for (let j = 0; j < songWords[i].length; j++) {
+        returnVariable.push(
+          "<span style='color:yellow;'>" + songWords[i][j] + "</span>",
+        );
+      }
+      returnVariable.push("<span> </span>");
+    } else {
+      for (let j = 0; j < songWords[i].length; j++) {
+        returnVariable.push(
+          "<span>" + songWords[i][j] + "</span>",
+        );
+      }
+      returnVariable.push("<span> </span>");
+    }
+  }
+  song = returnVariable.join("");
+  display.innerHTML = song;
+  updateCursor();
 }
 
 document.addEventListener("DOMContentLoaded", function () {
