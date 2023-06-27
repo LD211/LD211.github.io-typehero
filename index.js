@@ -1,4 +1,9 @@
 let spot;
+let wordNumber = 0;
+let wordTime;
+let wordArray = [];
+let entireSongInWords;
+let swapTime;
 let mtWords;
 let monkeyWords = [];
 let targetpos = null;
@@ -49,6 +54,10 @@ document.addEventListener("keydown", (event) => {
     if (title === "english200") {
       display.innerText = "";
       remakeEnglishWords();
+    } else if (title === "bestpractice") {
+      display.innerText = "";
+      wordNumber = 0;
+      generateBadWords();
     }
   } else if (event.key === "ArrowLeft") {
     songIndex--;
@@ -66,12 +75,59 @@ document.addEventListener("keydown", (event) => {
     backgroundDiv.style.backgroundImage = "url('./images/none.jpg')";
     getEnglishWords();
     spotNumber = 0;
+  } else if (event.key === "*") {
+    title = "bestpractice";
+    display.innerText = "";
+    backgroundDiv.style.backgroundImage = "url('./images/none.jpg')";
+    getEnglishWordsBP();
+    spotNumber = 0;
   }
 });
 
 display.addEventListener("click", function () {
   textInput.focus();
 });
+
+function getEnglishWordsBP() {
+  fetch("./lyrics/" + "english200" + ".txt")
+    .then((response) => {
+      return response.text();
+    })
+    .then((text) => {
+      entireSong = text;
+      entireSong = entireSong.replace(/\r?\n|\r/g, "\n");
+      mtWords = entireSong.split("\n");
+      monkeyWords = mtWords;
+      let randomIndex;
+      for (let i = 0; i < mtWords.length; i++) {
+        randomIndex = Math.floor(Math.random() * i);
+        [mtWords[i], mtWords[randomIndex]] = [mtWords[randomIndex], mtWords[i]];
+      }
+      entireSong = mtWords.join(" ");
+      entireSongInWords = entireSong.split(" ");
+      testRemake(entireSong);
+    });
+}
+
+function generateBadWords() {
+  entireSong = "";
+  wordArray.sort((a, b) => b.time - a.time);
+  let badWordList = wordArray;
+  let returnVariable = [];
+  for (let i = 0; i < badWordList.length; i++) {
+    for (let j = 0; j < badWordList[i].word.length; j++) {
+      returnVariable.push("<span>" + badWordList[i].word[j] + "</span>");
+    }
+    entireSong += badWordList[i].word;
+    returnVariable.push("<span> </span>");
+    entireSong += " ";
+  }
+
+  display.innerHTML = returnVariable.join("");
+  entireSongInWords = entireSong.split(" ");
+  updateCursor();
+  wordArray = [];
+}
 
 function liveWordsPerMinute() {
   setInterval(function () {
@@ -94,7 +150,7 @@ function restartGame() {
 }
 
 function getEnglishWords() {
-  fetch("./lyrics/" + title + ".txt")
+  fetch("./lyrics/" + "english200" + ".txt")
     .then((response) => {
       return response.text();
     })
@@ -109,6 +165,8 @@ function getEnglishWords() {
         [mtWords[i], mtWords[randomIndex]] = [mtWords[randomIndex], mtWords[i]];
       }
       entireSong = mtWords.join(" ");
+      entireSongInWords = entireSong.split(" ");
+
       testRemake(entireSong);
     });
 }
@@ -173,8 +231,9 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     if (startFlag === 0) {
       startTime = new Date();
+      swapTime = startTime;
       if (title) {
-        if (title !== "english200") {
+        if (title !== "english200" && title !== "bestpractice") {
           theAudio = new Audio("./sounds/" + title + ".mp3");
           visualizeTheAudio(theAudio);
         }
@@ -330,6 +389,15 @@ function gameInput(song) {
   if (spot == "\r" || spot == "\n") {
     spotNumber++;
     updateCursor();
+  }
+  if (song === " " && spot === " ") {
+    wordTime = new Date().getTime() - swapTime.getTime();
+    swapTime = new Date();
+    wordArray.push({
+      time: wordTime / 1000,
+      word: entireSongInWords[wordNumber++],
+    });
+    //console.log(wordArray);
   }
   if (spotNumber > entireSong.length - 1) {
     endTime = new Date();
